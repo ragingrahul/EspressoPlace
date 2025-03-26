@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 
 function Canvas() {
-  const gridRows = 50;
-  const gridCols = 100;
+  const gridRows = 100;
+  const gridCols = 200;
   const [gridColors, setGridColors] = useState<string[][]>(
     Array.from({ length: 200 }, () => new Array(200).fill('white'))
   );
@@ -15,8 +15,9 @@ function Canvas() {
   };
 
   const generateGridCells = () => {
-    const cellSize = 10;
+    const cellSize = 4;
     const gridCells = [];
+    const [cellHover, setCellHover] = useState<any>(null);
 
     for (let row = 0; row < gridRows; row++) {
       for (let col = 0; col < gridCols; col++) {
@@ -29,6 +30,10 @@ function Canvas() {
               width: `${cellSize}px`,
               height: `${cellSize}px`,
               backgroundColor: cellColor,
+              boxShadow:
+                cellHover && cellHover.x === row && cellHover.y === col
+                  ? 'inset 0 0 0 0.5px rgba(0, 0, 0, 0.5)'
+                  : '0 0 0 0 rgba(0, 0, 0, 0)',
             }}
             onClick={() => handleCellClick(row, col)}
           ></div>
