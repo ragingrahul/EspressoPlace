@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import '@/lib/env';
-
+ 
 import Canvas from '../components/Canvas';
 /**
  * SVGR Support
@@ -13,6 +13,8 @@ import Canvas from '../components/Canvas';
  */
 import Logo from '~/svg/Logo.svg';
 import { Header } from '@/components/Header/Header';
+import DraggableBox from '@/components/DraggableBox';
+ 
 
 // !STARTERCONF -> Select !STARTERCONF and CMD + SHIFT + F
 // Before you begin editing, follow all comments with `STARTERCONF`,
@@ -21,10 +23,14 @@ import { Header } from '@/components/Header/Header';
 export default function HomePage() {
   return (
     <main>
+ 
       <Header />
       <div className='flex justify-center items-center h-screen'>
         <Canvas />
       </div>
+ 
+      <DraggableBox />
+ 
     </main>
   );
 }

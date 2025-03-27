@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 
+ 
 function Canvas() {
   const gridRows = 50;
   const gridCols = 50;
@@ -13,10 +14,21 @@ function Canvas() {
     setGridColors(updatedColors);
     console.log(row, col);
   };
+ 
+type Props = {
+  handleCellClick: (row: number, col: number) => void;
+  gridColors: string[][];
+  setCoordinates: Dispatch<SetStateAction<{ x: number; y: number }>>;
+};
+function Canvas({ handleCellClick, gridColors, setCoordinates }: Props) {
+  const gridRows = 100;
+  const gridCols = 200;
+ 
 
   const generateGridCells = () => {
-    const cellSize = 10;
+    const cellSize = 4;
     const gridCells = [];
+    const [cellHover, setCellHover] = useState<any>(null);
 
     for (let row = 0; row < gridRows; row++) {
       for (let col = 0; col < gridCols; col++) {
@@ -29,8 +41,15 @@ function Canvas() {
               width: `${cellSize}px`,
               height: `${cellSize}px`,
               backgroundColor: cellColor,
+              boxShadow:
+                cellHover && cellHover.x === row && cellHover.y === col
+                  ? 'inset 0 0 0 0.5px rgba(0, 0, 0, 0.5)'
+                  : '0 0 0 0 rgba(0, 0, 0, 0)',
             }}
-            onClick={() => handleCellClick(row, col)}
+            onClick={() => {
+              setCoordinates({ x: row, y: col });
+              handleCellClick(row, col);
+            }}
           ></div>
         );
       }
