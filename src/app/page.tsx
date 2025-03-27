@@ -1,13 +1,8 @@
 'use client';
 
-import Head from 'next/head';
 import * as React from 'react';
 import '@/lib/env';
 
-import ArrowLink from '@/components/links/ArrowLink';
-import ButtonLink from '@/components/links/ButtonLink';
-import UnderlineLink from '@/components/links/UnderlineLink';
-import UnstyledLink from '@/components/links/UnstyledLink';
 import Canvas from '../components/Canvas';
 /**
  * SVGR Support
@@ -17,6 +12,7 @@ import Canvas from '../components/Canvas';
  * @see https://stackoverflow.com/questions/68103844/how-to-override-next-js-svg-module-declaration
  */
 import Logo from '~/svg/Logo.svg';
+import { Header } from '@/components/Header/Header';
 
 // !STARTERCONF -> Select !STARTERCONF and CMD + SHIFT + F
 // Before you begin editing, follow all comments with `STARTERCONF`,
@@ -25,7 +21,10 @@ import Logo from '~/svg/Logo.svg';
 export default function HomePage() {
   return (
     <main>
-      <Canvas />
+      <Header />
+      <div className='flex justify-center items-center h-screen'>
+        <Canvas />
+      </div>
     </main>
   );
 }

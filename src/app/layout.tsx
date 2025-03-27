@@ -49,14 +49,21 @@ export const metadata: Metadata = {
   // ],
 };
 
+import { headers } from 'next/headers'; // added
+import ContextProvider from '@/context';
+
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
+  const cookies = headers().get('cookie');
+
   return (
-    <html>
-      <body>{children}</body>
+    <html lang='en'>
+      <body>
+        <ContextProvider cookies={cookies}>{children}</ContextProvider>
+      </body>
     </html>
   );
 }

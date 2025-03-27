@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 function Canvas() {
   const gridRows = 50;
-  const gridCols = 100;
+  const gridCols = 50;
   const [gridColors, setGridColors] = useState<string[][]>(
     Array.from({ length: 200 }, () => new Array(200).fill('white'))
   );
