@@ -1,8 +1,8 @@
 // config/index.tsx
 
-import { cookieStorage, createStorage, http } from 'wagmi';
+import { arbitrum, mainnet, sepolia } from '@reown/appkit/networks';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
-import { mainnet, arbitrum, sepolia } from '@reown/appkit/networks';
+import { cookieStorage, createStorage } from 'wagmi';
 
 // Get projectId from https://cloud.reown.com
 export const projectId = 'b1df1113461984dbb0be3d8b9c74c388';
