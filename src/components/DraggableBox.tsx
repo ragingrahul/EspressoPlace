@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import ColorPalette from './ColourPalette';
+
 import Canvas from './Canvas';
+import ColorPalette from './ColourPalette';
 
 const colorOptions = {
   red: '#FF0000',

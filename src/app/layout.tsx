@@ -50,6 +50,7 @@ export const metadata: Metadata = {
 };
 
 import { headers } from 'next/headers'; // added
+
 import ContextProvider from '@/context';
 
 export default function RootLayout({

@@ -1,20 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 
- 
-function Canvas() {
-  const gridRows = 50;
-  const gridCols = 50;
-  const [gridColors, setGridColors] = useState<string[][]>(
-    Array.from({ length: 200 }, () => new Array(200).fill('white'))
-  );
-
-  const handleCellClick = (row: number, col: number) => {
-    const updatedColors = [...gridColors];
-    updatedColors[row][col] = 'red';
-    setGridColors(updatedColors);
-    console.log(row, col);
-  };
- 
 type Props = {
   handleCellClick: (row: number, col: number) => void;
   gridColors: string[][];
@@ -23,12 +8,11 @@ type Props = {
 function Canvas({ handleCellClick, gridColors, setCoordinates }: Props) {
   const gridRows = 100;
   const gridCols = 200;
- 
+  const [cellHover, setCellHover] = useState<any>(null);
 
   const generateGridCells = () => {
     const cellSize = 4;
     const gridCells = [];
-    const [cellHover, setCellHover] = useState<any>(null);
 
     for (let row = 0; row < gridRows; row++) {
       for (let col = 0; col < gridCols; col++) {
