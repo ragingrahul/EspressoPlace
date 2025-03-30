@@ -8,7 +8,9 @@ type Props = {
 function Canvas({ handleCellClick, gridColors, setCoordinates }: Props) {
   const gridRows = 100;
   const gridCols = 200;
-  const [cellHover, setCellHover] = useState<any>(null);
+  const [cellHover, setCellHover] = useState<{ x: number; y: number } | null>(
+    null,
+  );
 
   const generateGridCells = () => {
     const cellSize = 4;
@@ -20,21 +22,25 @@ function Canvas({ handleCellClick, gridColors, setCoordinates }: Props) {
         gridCells.push(
           <div
             key={`${row}-${col}`}
-            className='cursor-pointer transition duration-300'
+            className='cursor-pointer transition-all duration-200'
             style={{
               width: `${cellSize}px`,
               height: `${cellSize}px`,
               backgroundColor: cellColor,
               boxShadow:
                 cellHover && cellHover.x === row && cellHover.y === col
-                  ? 'inset 0 0 0 0.5px rgba(0, 0, 0, 0.5)'
-                  : '0 0 0 0 rgba(0, 0, 0, 0)',
+                  ? '0 0 8px rgba(196, 175, 138, 0.5)'
+                  : cellColor !== '#F8F5F0'
+                    ? '0 0 4px ' + cellColor + '40'
+                    : 'none',
             }}
             onClick={() => {
               setCoordinates({ x: row, y: col });
               handleCellClick(row, col);
             }}
-          ></div>
+            onMouseEnter={() => setCellHover({ x: row, y: col })}
+            onMouseLeave={() => setCellHover(null)}
+          ></div>,
         );
       }
     }
@@ -43,8 +49,8 @@ function Canvas({ handleCellClick, gridColors, setCoordinates }: Props) {
   };
 
   return (
-    <div className='flex items-center flex-col'>
-      <div className='flex flex-wrap w-[800px] border-red-500 border-2'>
+    <div className='flex flex-col items-center'>
+      <div className='flex w-[800px] flex-wrap overflow-hidden rounded-lg border border-[rgba(196,175,138,0.3)] bg-[#F8F5F0] shadow-[0_0_20px_rgba(196,175,138,0.15)]'>
         {generateGridCells()}
       </div>
     </div>

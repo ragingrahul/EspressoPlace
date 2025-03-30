@@ -16,6 +16,7 @@ import React, { type ReactNode } from 'react';
 import { type Config, cookieToInitialState, WagmiProvider } from 'wagmi';
 
 import { projectId, wagmiAdapter } from '@/config';
+import { espressoPlace } from '@/config/espressoplace';
 
 // Set up queryClient
 const queryClient = new QueryClient();
@@ -36,7 +37,16 @@ const metadata = {
 const modal = createAppKit({
   adapters: [wagmiAdapter],
   projectId,
-  networks: [mainnet, arbitrum, avalanche, base, optimism, polygon, sepolia],
+  networks: [
+    mainnet,
+    arbitrum,
+    avalanche,
+    base,
+    optimism,
+    polygon,
+    sepolia,
+    espressoPlace,
+  ],
   defaultNetwork: mainnet,
   metadata: metadata,
   features: {
@@ -54,7 +64,7 @@ function ContextProvider({
 }) {
   const initialState = cookieToInitialState(
     wagmiAdapter.wagmiConfig as Config,
-    cookies
+    cookies,
   );
 
   return (

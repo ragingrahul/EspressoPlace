@@ -4,12 +4,14 @@ import Canvas from './Canvas';
 import ColorPalette from './ColourPalette';
 
 const colorOptions = {
-  red: '#FF0000',
-  orange: '#FFA500',
-  yellow: '#FFFF00',
-  green: '#00FF00',
-  blue: '#0000FF',
-  purple: '#800080',
+  red: '#FF3D3D',
+  orange: '#FF9C41',
+  yellow: '#FFE14C',
+  green: '#4CFF73',
+  blue: '#3D8BFF',
+  purple: '#AD4CFF',
+  cyan: '#20D2EF',
+  magenta: '#FF3DB2',
   white: '#FFFFFF',
   black: '#000000',
 };
@@ -17,13 +19,13 @@ const colorOptions = {
 function DraggableBox() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
-  const [selectedColor, setSelectedColor] = useState<string>('#FF0000');
+  const [selectedColor, setSelectedColor] = useState<string>('#FF3D3D'); // Default to red
   const [coordinates, setCoordinates] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
   });
   const [gridColors, setGridColors] = useState<string[][]>(
-    Array.from({ length: 100 }, () => new Array(200).fill('white'))
+    Array.from({ length: 100 }, () => new Array(200).fill('#F8F5F0')), // Beige background
   );
 
   const handleCellClick = (row: number, col: number) => {
@@ -60,11 +62,18 @@ function DraggableBox() {
   };
 
   return (
-    <div>
+    <div className='relative pt-10'>
+      <div className='absolute left-1/2 top-0 mb-6 -translate-x-1/2 transform rounded-lg px-4 py-1 text-center text-[#5d4422]'>
+        <p className='text-sm opacity-75'>
+          Zoom with scroll wheel • Drag to move
+        </p>
+      </div>
+
       <div
-        className='relative'
+        className='relative cursor-move'
         style={{
           transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+          transition: 'transform 0.1s ease-out',
         }}
         onMouseDown={handleMouseDown}
         onWheel={handleWheel}
@@ -75,7 +84,8 @@ function DraggableBox() {
           setCoordinates={setCoordinates}
         />
       </div>
-      <div className='z-50 flex items-center justify-center h-36'>
+
+      <div className='fixed bottom-8 left-1/2 z-50 flex -translate-x-1/2 transform items-center justify-center'>
         <ColorPalette
           colorOptions={colorOptions}
           coordinates={coordinates}
