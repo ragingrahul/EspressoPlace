@@ -27,8 +27,8 @@ if (!projectId) {
 
 // Set up metadata
 const metadata = {
-  name: 'Place',
-  description: 'AppKit Example',
+  name: 'EspressoPlace',
+  description: 'EspressoPlace Dapp',
   url: 'https://reown.com/appkit', // origin must match your domain & subdomain
   icons: ['https://assets.reown.com/reown-profile-pic.png'],
 };
@@ -38,6 +38,7 @@ const modal = createAppKit({
   adapters: [wagmiAdapter],
   projectId,
   networks: [
+    espressoPlace,
     mainnet,
     arbitrum,
     avalanche,
@@ -45,9 +46,8 @@ const modal = createAppKit({
     optimism,
     polygon,
     sepolia,
-    espressoPlace,
   ],
-  defaultNetwork: mainnet,
+  defaultNetwork: espressoPlace,
   metadata: metadata,
   features: {
     connectMethodsOrder: ['wallet'],

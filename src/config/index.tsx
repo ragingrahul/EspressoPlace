@@ -13,7 +13,13 @@ if (!projectId) {
   throw new Error('Project ID is not defined');
 }
 
-export const networks = [mainnet, arbitrum, sepolia, espressoPlace];
+export const networks = [espressoPlace, mainnet, arbitrum, sepolia];
+
+// Get the RPC URL from the chain configuration
+const espressoRpcUrl = espressoPlace.rpcUrls.default.http[0];
+
+// Set up the HTTP transport with the proxied URL
+const customHttpTransport = http(espressoRpcUrl);
 
 //Set up the Wagmi Adapter (Config)
 export const wagmiAdapter = new WagmiAdapter({
@@ -24,7 +30,7 @@ export const wagmiAdapter = new WagmiAdapter({
   projectId,
   networks,
   transports: {
-    [espressoPlace.id]: http('http://51.20.141.87:8547'),
+    [espressoPlace.id]: customHttpTransport,
   },
 });
 
