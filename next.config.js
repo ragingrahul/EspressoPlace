@@ -7,6 +7,16 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
 
+  // Add rewrites for RPC endpoint
+  async rewrites() {
+    return [
+      {
+        source: '/api/rpc/:path*',
+        destination: 'http://51.20.141.87:8547/:path*',
+      },
+    ];
+  },
+
   // Uncoment to add domain whitelist
   // images: {
   //   remotePatterns: [
@@ -20,7 +30,7 @@ const nextConfig = {
   webpack(config) {
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((rule) =>
-      rule.test?.test?.('.svg')
+      rule.test?.test?.('.svg'),
     );
 
     config.module.rules.push(
@@ -40,7 +50,7 @@ const nextConfig = {
           dimensions: false,
           titleProp: true,
         },
-      }
+      },
     );
 
     // Modify the file loader rule to ignore *.svg, since we have it handled now.

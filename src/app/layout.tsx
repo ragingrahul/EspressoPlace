@@ -62,7 +62,8 @@ export default function RootLayout({
 
   return (
     <html lang='en'>
-      <body>
+      <body className='grid-lines min-h-screen bg-[rgb(248,245,240)] text-[#453315]'>
+        <div className='grid-lines fixed inset-0 -z-10 bg-[#f8f5f0]'></div>
         <ContextProvider cookies={cookies}>{children}</ContextProvider>
       </body>
     </html>

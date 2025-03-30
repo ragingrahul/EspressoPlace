@@ -16,6 +16,7 @@ import React, { type ReactNode } from 'react';
 import { type Config, cookieToInitialState, WagmiProvider } from 'wagmi';
 
 import { projectId, wagmiAdapter } from '@/config';
+import { espressoPlace } from '@/config/espressoplace';
 
 // Set up queryClient
 const queryClient = new QueryClient();
@@ -26,18 +27,27 @@ if (!projectId) {
 
 // Set up metadata
 const metadata = {
-  name: 'Place',
-  description: 'AppKit Example',
+  name: 'EspressoPlace',
+  description: 'EspressoPlace Dapp',
   url: 'https://reown.com/appkit', // origin must match your domain & subdomain
   icons: ['https://assets.reown.com/reown-profile-pic.png'],
 };
 
 // Create the modal
-const modal = createAppKit({
+export const modal = createAppKit({
   adapters: [wagmiAdapter],
   projectId,
-  networks: [mainnet, arbitrum, avalanche, base, optimism, polygon, sepolia],
-  defaultNetwork: mainnet,
+  networks: [
+    espressoPlace,
+    mainnet,
+    arbitrum,
+    avalanche,
+    base,
+    optimism,
+    polygon,
+    sepolia,
+  ],
+  defaultNetwork: espressoPlace,
   metadata: metadata,
   features: {
     connectMethodsOrder: ['wallet'],
@@ -54,7 +64,7 @@ function ContextProvider({
 }) {
   const initialState = cookieToInitialState(
     wagmiAdapter.wagmiConfig as Config,
-    cookies
+    cookies,
   );
 
   return (
