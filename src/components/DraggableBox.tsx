@@ -32,13 +32,14 @@ function DraggableBox() {
     const updatedColors = [...gridColors];
     updatedColors[row][col] = selectedColor;
     setGridColors(updatedColors);
-    console.log(row, col);
   };
 
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleMouseDown = (e: any) => {
     const startX = e.clientX - position.x;
     const startY = e.clientY - position.y;
 
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleMouseMove = (e: any) => {
       setPosition({
         x: e.clientX - startX,
@@ -55,6 +56,7 @@ function DraggableBox() {
     window.addEventListener('mouseup', handleMouseUp);
   };
 
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleWheel = (e: any) => {
     e.preventDefault();
     const newScale = Math.max(0.1, Math.min(scale + e.deltaY * -0.001, 3));

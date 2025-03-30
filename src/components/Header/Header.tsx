@@ -28,49 +28,28 @@ export const Header: React.FC = () => {
                 <h1 className='relative z-10 text-2xl font-bold tracking-tight transition-all duration-300 group-hover:tracking-wider'>
                   {/* First part with gradient text */}
                   <span className='relative inline-block bg-gradient-to-r from-[#8B4513] via-[#A0522D] to-[#CD853F] bg-clip-text text-transparent'>
-                    <span className='inline-block transition-transform duration-150 hover:translate-y-[-2px]'>
-                      E
-                    </span>
-                    <span className='inline-block transition-transform delay-[50ms] duration-150 hover:translate-y-[-2px]'>
-                      s
-                    </span>
-                    <span className='inline-block transition-transform delay-[100ms] duration-150 hover:translate-y-[-2px]'>
-                      p
-                    </span>
-                    <span className='inline-block transition-transform delay-[150ms] duration-150 hover:translate-y-[-2px]'>
-                      r
-                    </span>
-                    <span className='inline-block transition-transform delay-[200ms] duration-150 hover:translate-y-[-2px]'>
-                      e
-                    </span>
-                    <span className='inline-block transition-transform delay-[250ms] duration-150 hover:translate-y-[-2px]'>
-                      s
-                    </span>
-                    <span className='inline-block transition-transform delay-[300ms] duration-150 hover:translate-y-[-2px]'>
-                      s
-                    </span>
-                    <span className='inline-block transition-transform delay-[350ms] duration-150 hover:translate-y-[-2px]'>
-                      o
-                    </span>
+                    {Array.from('Espresso').map((letter, index) => (
+                      <span
+                        key={index}
+                        className='inline-block transition-transform duration-150 hover:translate-y-[-2px]'
+                        style={{ transitionDelay: `${index * 50}ms` }}
+                      >
+                        {letter}
+                      </span>
+                    ))}
                   </span>
 
                   {/* Second part with different gradient */}
                   <span className='relative ml-1 inline-block bg-gradient-to-r from-[#A0522D] via-[#CD853F] to-[#DEB887] bg-clip-text font-extrabold text-transparent'>
-                    <span className='inline-block transition-transform delay-[400ms] duration-150 hover:translate-y-[-2px]'>
-                      P
-                    </span>
-                    <span className='inline-block transition-transform delay-[450ms] duration-150 hover:translate-y-[-2px]'>
-                      l
-                    </span>
-                    <span className='inline-block transition-transform delay-[500ms] duration-150 hover:translate-y-[-2px]'>
-                      a
-                    </span>
-                    <span className='inline-block transition-transform delay-[550ms] duration-150 hover:translate-y-[-2px]'>
-                      c
-                    </span>
-                    <span className='inline-block transition-transform delay-[600ms] duration-150 hover:translate-y-[-2px]'>
-                      e
-                    </span>
+                    {Array.from('Place').map((letter, index) => (
+                      <span
+                        key={index}
+                        className='inline-block transition-transform duration-150 hover:translate-y-[-2px]'
+                        style={{ transitionDelay: `${(index + 8) * 50}ms` }}
+                      >
+                        {letter}
+                      </span>
+                    ))}
                   </span>
                 </h1>
 
