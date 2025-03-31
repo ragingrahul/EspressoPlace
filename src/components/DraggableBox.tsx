@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { useAccount } from 'wagmi';
+
+import { getCanvas, placePixel } from '@/services/contractService';
 
 import Canvas from './Canvas';
 import ColorPalette from './ColourPalette';
@@ -16,7 +20,20 @@ const colorOptions = {
   black: '#000000',
 };
 
+const getColorFromHex = (hex: string) => {
+  if (!hex.startsWith('#')) {
+    hex = '#' + hex;
+  }
+  for (const [colorCode] of Object.entries(colorOptions)) {
+    if (colorCode.toLowerCase() === hex.toLowerCase()) {
+      return colorCode;
+    }
+  }
+  return hex;
+};
+
 function DraggableBox() {
+  const { isConnected } = useAccount();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
   const [selectedColor, setSelectedColor] = useState<string>('#FF3D3D'); // Default to red
@@ -27,11 +44,98 @@ function DraggableBox() {
   const [gridColors, setGridColors] = useState<string[][]>(
     Array.from({ length: 100 }, () => new Array(200).fill('#F8F5F0')), // Beige background
   );
+  const [isPlacing, setIsPlacing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
-  const handleCellClick = (row: number, col: number) => {
+  // Load canvas data when component mounts
+  useEffect(() => {
+    async function loadCanvasData() {
+      try {
+        setIsLoading(true);
+        setLoadingProgress(0);
+
+        // Create an array of promises for parallel loading
+        const loadPromises = Array.from({ length: 100 }, async (_, x) => {
+          try {
+            const columnData = await getCanvas(x);
+            return { x, data: columnData };
+          } catch (err) {
+            return { x, data: null };
+          }
+        });
+
+        const BATCH_SIZE = 10;
+        const newGridColors = [...gridColors];
+
+        for (let i = 0; i < loadPromises.length; i += BATCH_SIZE) {
+          const batch = loadPromises.slice(i, i + BATCH_SIZE);
+          const results = await Promise.all(batch);
+
+          results.forEach(({ x, data }) => {
+            if (data && Array.isArray(data)) {
+              for (let y = 0; y < data.length && y < 200; y++) {
+                if (data[y] && data[y] !== '') {
+                  newGridColors[x][y] = getColorFromHex(data[y]);
+                }
+              }
+            }
+          });
+
+          // Update progress
+          setLoadingProgress(
+            Math.min(
+              100,
+              Math.round(((i + BATCH_SIZE) / loadPromises.length) * 100),
+            ),
+          );
+        }
+
+        setGridColors(newGridColors);
+        toast.success('Canvas loaded from blockchain');
+      } catch (error) {
+        toast.error('Failed to load canvas from blockchain');
+      } finally {
+        setIsLoading(false);
+        setLoadingProgress(0);
+      }
+    }
+
+    loadCanvasData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleCellClick = async (row: number, col: number) => {
     const updatedColors = [...gridColors];
     updatedColors[row][col] = selectedColor;
     setGridColors(updatedColors);
+
+    if (!isConnected) {
+      toast.error(
+        'Please connect your wallet to save your pixel on the blockchain',
+      );
+      return;
+    }
+
+    try {
+      if (isPlacing) return;
+
+      setIsPlacing(true);
+
+      const colorHex = selectedColor.replace('#', '');
+
+      await placePixel(row, col, colorHex);
+
+      toast.success('Pixel placed on the blockchain!');
+    } catch (error) {
+      toast.error('Failed to place pixel on the blockchain');
+
+      const revertedColors = [...gridColors];
+      revertedColors[row][col] = '#F8F5F0'; // Revert to background color
+      setGridColors(revertedColors);
+    } finally {
+      setIsPlacing(false);
+    }
   };
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,21 +175,38 @@ function DraggableBox() {
         </p>
       </div>
 
-      <div
-        className='relative cursor-move'
-        style={{
-          transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
-          transition: 'transform 0.1s ease-out',
-        }}
-        onMouseDown={handleMouseDown}
-        onWheel={handleWheel}
-      >
-        <Canvas
-          gridColors={gridColors}
-          handleCellClick={handleCellClick}
-          setCoordinates={setCoordinates}
-        />
-      </div>
+      {isLoading ? (
+        <div className='flex h-[600px] items-center justify-center'>
+          <div className='text-center text-[#5d4422]'>
+            <div className='inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]'></div>
+            <p className='mt-4'>
+              Loading canvas from blockchain... {loadingProgress}%
+            </p>
+            <div className='mt-2 h-2 w-[300px] overflow-hidden rounded-full bg-gray-200'>
+              <div
+                className='h-full bg-[#5d4422] transition-all duration-300 ease-out'
+                style={{ width: `${loadingProgress}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div
+          className='relative cursor-move'
+          style={{
+            transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+            transition: 'transform 0.1s ease-out',
+          }}
+          onMouseDown={handleMouseDown}
+          onWheel={handleWheel}
+        >
+          <Canvas
+            gridColors={gridColors}
+            handleCellClick={handleCellClick}
+            setCoordinates={setCoordinates}
+          />
+        </div>
+      )}
 
       <div className='fixed bottom-8 left-1/2 z-50 flex -translate-x-1/2 transform items-center justify-center'>
         <ColorPalette
@@ -94,6 +215,17 @@ function DraggableBox() {
           setSelectedColor={setSelectedColor}
         />
       </div>
+
+      {isPlacing && (
+        <div className='fixed bottom-24 left-1/2 z-50 min-w-[300px] max-w-[400px] -translate-x-1/2 transform rounded-xl border-2 border-[#5d4422] bg-[#F8F5F0] p-4 shadow-lg backdrop-blur-sm'>
+          <div className='flex items-center justify-center gap-3'>
+            <div className='h-5 w-5 animate-spin rounded-full border-2 border-[#5d4422] border-t-transparent'></div>
+            <p className='text-lg font-semibold text-[#5d4422]'>
+              Placing pixel on blockchain...
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

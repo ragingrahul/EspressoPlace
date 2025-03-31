@@ -45,10 +45,15 @@ export default {
             backgroundPosition: '700px 0',
           },
         },
+        'slide-in': {
+          '0%': { transform: 'translateX(-100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
       },
       animation: {
         flicker: 'flicker 3s linear infinite',
         shimmer: 'shimmer 1.3s linear infinite',
+        'slide-in': 'slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards',
       },
     },
   },
