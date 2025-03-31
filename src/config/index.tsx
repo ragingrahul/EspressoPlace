@@ -1,6 +1,11 @@
 // config/index.tsx
 
-import { arbitrum, mainnet, sepolia } from '@reown/appkit/networks';
+import {
+  arbitrum,
+  arbitrumSepolia,
+  mainnet,
+  sepolia,
+} from '@reown/appkit/networks';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { cookieStorage, createStorage, http } from 'wagmi';
 
@@ -13,7 +18,13 @@ if (!projectId) {
   throw new Error('Project ID is not defined');
 }
 
-export const networks = [espressoPlace, mainnet, arbitrum, sepolia];
+export const networks = [
+  espressoPlace,
+  arbitrumSepolia,
+  mainnet,
+  arbitrum,
+  sepolia,
+];
 
 // Get the RPC URL from the chain configuration
 const espressoRpcUrl = espressoPlace.rpcUrls.default.http[0];
