@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAccount } from 'wagmi';
 
-import { getCanvas, placePixel } from '@/services/contractService';
+import { CHAIN_NAMES, getCanvas, placePixel } from '@/services/contractService';
 
 import Canvas from './Canvas';
 import ColorPalette from './ColourPalette';
@@ -33,7 +33,7 @@ const getColorFromHex = (hex: string) => {
 };
 
 function DraggableBox() {
-  const { isConnected } = useAccount();
+  const { isConnected, address, chainId } = useAccount();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
   const [selectedColor, setSelectedColor] = useState<string>('#FF3D3D'); // Default to red
@@ -105,15 +105,20 @@ function DraggableBox() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleCellClick = async (row: number, col: number) => {
-    const updatedColors = [...gridColors];
-    updatedColors[row][col] = selectedColor;
-    setGridColors(updatedColors);
+  const handleCellClick = async (x: number, y: number) => {
+    if (isPlacing) return;
 
-    if (!isConnected) {
-      toast.error(
-        'Please connect your wallet to save your pixel on the blockchain',
-      );
+    const newGridColors = [...gridColors];
+    newGridColors[x][y] = selectedColor;
+    setGridColors(newGridColors);
+
+    if (!isConnected || !address) {
+      toast.error('Please connect your wallet first');
+      return;
+    }
+
+    if (chainId !== 421614 && chainId !== 4406) {
+      toast.error('Please switch to Arbitrum Sepolia or Chain 4406');
       return;
     }
 
@@ -124,14 +129,14 @@ function DraggableBox() {
 
       const colorHex = selectedColor.replace('#', '');
 
-      await placePixel(row, col, colorHex);
+      await placePixel(x, y, colorHex);
 
       toast.success('Pixel placed on the blockchain!');
     } catch (error) {
       toast.error('Failed to place pixel on the blockchain');
 
       const revertedColors = [...gridColors];
-      revertedColors[row][col] = '#F8F5F0'; // Revert to background color
+      revertedColors[x][y] = '#F8F5F0'; // Revert to background color
       setGridColors(revertedColors);
     } finally {
       setIsPlacing(false);
@@ -221,9 +226,23 @@ function DraggableBox() {
           <div className='flex items-center justify-center gap-3'>
             <div className='h-5 w-5 animate-spin rounded-full border-2 border-[#5d4422] border-t-transparent'></div>
             <p className='text-lg font-semibold text-[#5d4422]'>
-              Placing pixel on blockchain...
+              Placing pixel on{' '}
+              {chainId
+                ? CHAIN_NAMES[chainId as keyof typeof CHAIN_NAMES] ||
+                  `Chain ${chainId}`
+                : 'blockchain'}
+              ...
             </p>
           </div>
+          <div className='mt-2 h-1 w-full overflow-hidden rounded-full bg-gray-200'>
+            <div className='h-full animate-pulse rounded-full bg-[#5d4422]'></div>
+          </div>
+          {chainId === 421614 && (
+            <p className='mt-2 text-center text-sm text-[#5d4422]'>
+              Your pixel will also be placed on {CHAIN_NAMES[4406]}{' '}
+              automatically
+            </p>
+          )}
         </div>
       )}
     </div>

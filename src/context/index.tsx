@@ -3,6 +3,7 @@
 
 import {
   arbitrum,
+  arbitrumSepolia,
   avalanche,
   base,
   mainnet,
@@ -46,6 +47,7 @@ export const modal = createAppKit({
     optimism,
     polygon,
     sepolia,
+    arbitrumSepolia,
   ],
   defaultNetwork: espressoPlace,
   metadata: metadata,
