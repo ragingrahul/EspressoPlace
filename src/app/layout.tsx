@@ -50,6 +50,7 @@ export const metadata: Metadata = {
 };
 
 import { headers } from 'next/headers'; // added
+import { Toaster } from 'react-hot-toast';
 
 import ContextProvider from '@/context';
 
@@ -64,7 +65,48 @@ export default function RootLayout({
     <html lang='en'>
       <body className='grid-lines min-h-screen bg-[rgb(248,245,240)] text-[#453315]'>
         <div className='grid-lines fixed inset-0 -z-10 bg-[#f8f5f0]'></div>
-        <ContextProvider cookies={cookies}>{children}</ContextProvider>
+        <ContextProvider cookies={cookies}>
+          {children}
+          <Toaster
+            position='bottom-left'
+            toastOptions={{
+              style: {
+                background: '#F8F5F0',
+                color: '#5d4422',
+                border: '2px solid #5d4422',
+                borderRadius: '12px',
+                padding: '20px 24px',
+                fontSize: '18px',
+                fontWeight: '600',
+                boxShadow: '0 8px 24px rgba(93, 68, 34, 0.2)',
+                backdropFilter: 'blur(8px)',
+                minWidth: '320px',
+                maxWidth: '420px',
+                transform: 'translateX(0)',
+                opacity: '1',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              },
+              success: {
+                iconTheme: {
+                  primary: '#5d4422',
+                  secondary: '#F8F5F0',
+                },
+                duration: 4000,
+                className:
+                  '!bg-[#F8F5F0] !border-[#5d4422] hover:scale-105 transition-transform duration-200 animate-slide-in',
+              },
+              error: {
+                iconTheme: {
+                  primary: '#FF3D3D',
+                  secondary: '#F8F5F0',
+                },
+                duration: 5000,
+                className:
+                  '!bg-[#FFF5F5] !border-[#FF3D3D] hover:scale-105 transition-transform duration-200 animate-slide-in',
+              },
+            }}
+          />
+        </ContextProvider>
       </body>
     </html>
   );
