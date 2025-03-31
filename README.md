@@ -4,7 +4,7 @@
   <h2>Smart Contracts</h2>
   <p>
     <strong>View our smart contracts implementation:</strong><br />
-    <a href="https://github.com/rahulrajsarma/EspressoPlace-contracts">github.com/rahulrajsarma/EspressoPlace-contracts</a>
+    <a href="https://github.com/ragingrahul/EspressoContract">github.com/rahulrajsarma/EspressoPlace-contracts</a>
   </p>
   <p><em>Implementation for both Arbitrum Sepolia and EspressoPlace Chain</em></p>
 </div>
